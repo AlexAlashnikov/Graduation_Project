@@ -1,6 +1,11 @@
-from django.views.generic import DetailView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .models import Category, Post
+from .forms import CommentCreateForm, PostCreateForm
+from .mixins import AuthorRequiredMixin
+from .models import Category, Comment, Post
 
 
 class PostDetailView(DetailView):
@@ -134,4 +139,173 @@ class CategoryListView(ListView):
         """
         context = super().get_context_data(**kwargs)
         context["title"] = "Категории"
+        return context
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    """
+    Создание объекта :model:`blog.Post`.
+
+    **Template:**
+
+    :template:`blog/post_create.html`
+    """
+
+    model = Post
+    template_name = "blog/post_create.html"
+    form_class = PostCreateForm
+    login_url = "profile:login"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Добавление поста"
+        return context
+
+
+class PostUpdateView(AuthorRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Обновление объекта :model:`blog.Post`.
+
+    **Context Object Name**
+
+    ``post``
+        Экземпляр :model:`blog.Post`.
+
+    **Template:**
+
+    :template:`blog/post_update.html`
+    """
+
+    model = Post
+    template_name = "blog/post_update.html"
+    context_object_name = "post"
+    form_class = PostCreateForm
+    login_url = "blog:home"
+    success_message = "Вы успешно обновили пост."
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Обновление поста: {self.object.title}"
+        return context
+
+
+class PostDeleteView(AuthorRequiredMixin, DeleteView):
+    """
+    Удаление объекта :model:`blog.Post`.
+
+    **Context Object Name**
+
+    ``post``
+        Экземпляр :model:`blog.Post`.
+
+    **Template:**
+
+    :template:`blog/post_delete.html`
+    """
+
+    model = Post
+    success_url = reverse_lazy("blog:home")
+    context_object_name = "post"
+    template_name = "blog/post_delete.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Удаление поста: {self.object.title}"
+        return context
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    """
+    Создание объекта :model:`blog.Comment`.
+
+    **Template:**
+
+    :template:`comment/comment_create.html`
+    """
+
+    template_name = "comment/comment_create.html"
+    form_class = CommentCreateForm
+    login_url = "profile:login"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = Post.objects.get(slug=self.kwargs["slug"])
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Добавления комментария"
+        return context
+
+
+class CommentUpdateView(AuthorRequiredMixin, UpdateView):
+    """
+    Обновление объекта :model:`blog.Comment`.
+
+    **Context Object Name**
+
+    ``comment``
+        Экземпляр :model:`blog.Comment`.
+
+    **Template:**
+
+    :template:`comment/comment_update.html`
+    """
+
+    model = Comment
+    context_object_name = "comment"
+    template_name = "comment/comment_update.html"
+    form_class = CommentCreateForm
+
+    def get_context_data(self, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Обновление комментария: {self.object.text}"
+        return context
+
+
+class CommentDeleteView(AuthorRequiredMixin, DeleteView):
+    """
+    Удаление объекта :model:`blog.Comment`.
+
+    **Context Object Name**
+
+    ``comment``
+        Экземпляр :model:`blog.Comment`.
+
+    **Template:**
+
+    :template:`comment/comment_delete.html`
+    """
+
+    model = Comment
+    context_object_name = "comment"
+    template_name = "comment/comment_delete.html"
+    success_url = reverse_lazy("blog:home")
+
+    def get_context_data(self, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Удаление комментария: {self.object.text}"
         return context
