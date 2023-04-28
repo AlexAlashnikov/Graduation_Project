@@ -84,3 +84,29 @@ class Post(models.Model):
         if not self.image:
             return "/static/img/placeholder.png"
         return self.image.url
+
+
+class Comment(models.Model):
+    """
+    Хранит записи комментариев,
+    связанную с :model:`Post` и :model:`auth.User`.
+    """
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="comments")
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Автор комментария", related_name="comments_author"
+    )
+    text = models.TextField(verbose_name="Текст комментария", max_length=1500)
+    pub_date = models.DateTimeField(verbose_name="Дата добавления", auto_now_add=True)
+
+    def __str__(self) -> str:
+        """
+        Возвращает строку в виде автора комментария и заголовок поста в амин панели.
+        """
+        return f"{self.author} {self.post.title}"
+
+    def get_absolute_url(self):
+        """
+        Ссылка поста, по slug полю.
+        """
+        return reverse("blog:post_detail", kwargs={"slug": self.post.slug})

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Post
+from .models import Category, Comment, Post
 
 
 @admin.register(Category)
@@ -20,3 +20,13 @@ class PostAdmin(admin.ModelAdmin):
 
     list_display = ["title", "author", "slug", "category"]
     list_display_links = ("title", "slug")
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    """
+    Регистрация в админ-панели :model:`blog.Comment`.
+    """
+
+    list_display = ["author", "post", "pub_date"]
+    list_filter = ["pub_date"]
