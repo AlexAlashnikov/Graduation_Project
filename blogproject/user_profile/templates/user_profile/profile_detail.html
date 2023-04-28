@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+{% load static %}
+
+
+{% block content %}
+<h5 class="card-title "><img src="{{profile.get_profile_image}}" width="150" height="150" alt="{{ profile }}">
+    {{ profile }}
+</h5>
+<br>
+<div class="card-text">
+    <ul>
+        <li>Никнейм: {{ profile.user.username }}</li>
+        <li>Заходил(а): {{ profile.user.last_login }}</li>
+        {% if profile.date_birthday %}
+            <li>Возраст: {{ profile.get_age }}</li>
+        {% endif %}
+        <li>О себе: {{ profile.bio }}</li>
+    </ul>
+</div>
+
+{% endblock %}
