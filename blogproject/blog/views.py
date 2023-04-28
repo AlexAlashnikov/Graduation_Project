@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
@@ -139,6 +140,44 @@ class CategoryListView(ListView):
         """
         context = super().get_context_data(**kwargs)
         context["title"] = "Категории"
+        return context
+
+
+class PostSearchView(ListView):
+    """
+    Отображение поиска списка объектов :model:`blog.Post`.
+
+    **Context Object Name**
+
+    ``posts``
+        Экземпляр :model:`blog.Post`.
+
+    **Template:**
+
+    :template:`blog/post_list.html`
+    """
+
+    model = Post
+    context_object_name = "posts"
+    allow_empty = True
+    template_name = "blog/post_list.html"
+
+    def get_queryset(self):
+        """
+        Вернуть список элементов для этого представления.
+        """
+        q = self.request.GET.get("do")
+        vector = SearchVector("body", weight="B") + SearchVector("title", weight="A")
+        query = SearchQuery(q)
+        return self.model.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gte=0.3).order_by("-rank")
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """
+        Получить контекст для этого представления.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Результаты поиска"
+        context["do"] = f"do={self.request.GET.get('value')}&"
         return context
 
 
