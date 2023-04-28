@@ -1,12 +1,23 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from .forms import CommentCreateForm, PostCreateForm
 from .mixins import AuthorRequiredMixin
 from .models import Category, Comment, Post
+
+
+def like_view(request):
+    """Изменить"""
+    post = get_object_or_404(Post, slug=request.POST.get("post_slug"))
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect(post, permanent=True)
 
 
 class PostDetailView(DetailView):

@@ -6,6 +6,7 @@ app_name = "profile"
 
 urlpatterns = [
     path("profile_detail/<str:slug>/", views.ProfileView.as_view(), name="profile_detail"),
+    path("profile_detail/<str:slug>/follow/", views.FollowingProfileCreateView.as_view(), name="follow_user"),
     path("update_profile/", views.ProfileEditView.as_view(), name="update_profile"),
     path("register/", views.RegisterCreateView.as_view(), name="register"),
     path("login/", views.UserLoginView.as_view(), name="login"),

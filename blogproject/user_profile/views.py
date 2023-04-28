@@ -3,8 +3,9 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, View
 
 from blog.models import Post
 
@@ -29,6 +30,20 @@ class ProfileView(DetailView):
         context["title"] = f"Страница пользователя: {self.object.user.username}"
         context["all_posts_user"] = Post.objects.filter(author=self.object.user)
         return context
+
+
+class FollowingProfileCreateView(View):
+    model = Profile
+
+    def post(self, request, **kwargs):
+        if request.user.is_authenticated:
+            profile = self.model.objects.get(slug=self.kwargs["slug"])
+            curent_user_profile = request.user.profile
+            if curent_user_profile in profile.follows.all():
+                profile.follows.remove(curent_user_profile)
+            else:
+                profile.follows.add(curent_user_profile)
+        return redirect(profile)
 
 
 class ProfileEditView(UpdateView):
