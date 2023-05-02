@@ -8,9 +8,7 @@ from .utils import unique_slugify
 
 
 class Category(models.Model):
-    """
-    Хранит записи категорий.
-    """
+    """Хранит записи категорий."""
 
     name = models.CharField(verbose_name="Название категории", max_length=100)
     slug = models.SlugField(max_length=200, blank=True)
@@ -18,15 +16,11 @@ class Category(models.Model):
     post_amount = models.IntegerField(default=0)
 
     def __str__(self) -> str:
-        """
-        Возвращает строку в виде названия категории в админ панели.
-        """
+        """Возвращает строку в виде названия категории."""
         return self.name
 
     def save(self, *args, **kwargs):
-        """
-        Создание поля slug при его отсутствии.
-        """
+        """Создание поля slug при его отсутствии."""
         if not self.slug:
             self.slug = unique_slugify(self, self.name)
         super().save(*args, **kwargs)
@@ -54,33 +48,26 @@ class Post(models.Model):
     )
 
     def __str__(self) -> str:
-        """
-        Возвращает строку в виде заголовка статьи в админ панели.
-        """
+        """Возвращает строку в виде заголовка статьи."""
         return self.title
 
     def save(self, *args, **kwargs):
-        """
-        Создание поля slug при его отсутствии.
-        """
+        """Создание поля slug при его отсутствии."""
         if not self.slug:
             self.slug = unique_slugify(self, self.title)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        """
-        Ссылка поста, по slug полю.
-        """
+        """Возвращает ссылку на пост, по идентификатору slug."""
         return reverse("blog:post_detail", kwargs={"slug": self.slug})
 
     def total_likes(self):
+        """Возвращает колличество likes."""
         return self.likes.count()
 
     @property
     def get_thumbnail(self):
-        """
-        Получение заглушки при отсутсвии изображения.
-        """
+        """Получение заглушки при отсутсвии изображения."""
         if not self.image:
             return "/static/img/placeholder.png"
         return self.image.url
@@ -101,12 +88,11 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         """
-        Возвращает строку в виде автора комментария и заголовок поста в амин панели.
+        Возвращает строку в виде автора комментария
+        и заголовка поста.
         """
         return f"{self.author} {self.post.title}"
 
     def get_absolute_url(self):
-        """
-        Ссылка поста, по slug полю.
-        """
+        """Возвращает ссылку на пост, по идентификатору slug."""
         return reverse("blog:post_detail", kwargs={"slug": self.post.slug})

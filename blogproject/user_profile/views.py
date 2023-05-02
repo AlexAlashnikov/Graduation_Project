@@ -15,7 +15,16 @@ from .models import Profile
 
 class ProfileView(DetailView):
     """
-    Представление профиля пользователя.
+    Отображение отдельного объекта :model:`user_profile.Profile`.
+
+    **Context Object Name**
+
+    ``profile``
+        Экземпляр :model:`user_profile.Profile`.
+
+    **Template:**
+
+    :template:`user_profile/profile_detail.html`
     """
 
     model = Profile
@@ -23,9 +32,7 @@ class ProfileView(DetailView):
     template_name = "user_profile/profile_detail.html"
 
     def get_context_data(self, **kwargs):
-        """
-        Получить контекст для этого представления.
-        """
+        """Получить контекст для этого представления."""
         context = super().get_context_data(**kwargs)
         context["title"] = f"Страница пользователя: {self.object.user.username}"
         context["all_posts_user"] = Post.objects.filter(author=self.object.user)
@@ -33,9 +40,20 @@ class ProfileView(DetailView):
 
 
 class FollowingProfileCreateView(View):
+    """
+    Создание объекта follows :model:`user_profile.Profile`.
+    """
+
     model = Profile
 
     def post(self, request, **kwargs):
+        """
+        Получение объекта :model:`user_profile.Profile`
+        по идентификатору `slug`.
+
+        Returns:
+            redirect: URL адрес объекта :model:`user_profile.Profile`
+        """
         if request.user.is_authenticated:
             profile = self.model.objects.get(slug=self.kwargs["slug"])
             curent_user_profile = request.user.profile
@@ -48,7 +66,11 @@ class FollowingProfileCreateView(View):
 
 class ProfileEditView(UpdateView):
     """
-    Представление для редактирования профиля пользователя.
+    Обновление объекта :model:`user_profile.Profile`.
+
+    **Template:**
+
+    :template:`user_profile/update_profile.html`
     """
 
     model = Profile
@@ -56,12 +78,11 @@ class ProfileEditView(UpdateView):
     template_name = "user_profile/update_profile.html"
 
     def get_object(self, queryset=None):
+        """Получение экземпляра :model:`user_profile.Profile`."""
         return self.request.user.profile
 
     def get_context_data(self, **kwargs):
-        """
-        Получить контекст для этого представления.
-        """
+        """Получить контекст для этого представления."""
         context = super().get_context_data(**kwargs)
         context["title"] = f"Редактирование профиля пользователя: {self.request.user.username}"
         if self.request.POST:
@@ -71,6 +92,10 @@ class ProfileEditView(UpdateView):
         return context
 
     def form_valid(self, form):
+        """
+        Проверка формы
+        для корректного сохранения данных в :model:`user_profile.Profile`.
+        """
         context = self.get_context_data()
         user_form = context["user_form"]
         with transaction.atomic():
@@ -85,7 +110,11 @@ class ProfileEditView(UpdateView):
 
 class RegisterCreateView(SuccessMessageMixin, CreateView):
     """
-    Представление регистрации на сайте с формой регистрации.
+    Создание объекта :model:`auth.User`.
+
+    **Template:**
+
+    :template:`authenticated/register_user.html`
     """
 
     form_class = UserRegisterForm
@@ -94,9 +123,7 @@ class RegisterCreateView(SuccessMessageMixin, CreateView):
     success_message = "Регистрация прошла успешно!"
 
     def get_context_data(self, **kwargs):
-        """
-        Получить контекст для этого представления.
-        """
+        """Получить контекст для этого представления."""
         context = super().get_context_data(**kwargs)
         context["title"] = "Регистрация на сайте"
         return context
@@ -104,7 +131,11 @@ class RegisterCreateView(SuccessMessageMixin, CreateView):
 
 class UserLoginView(SuccessMessageMixin, LoginView):
     """
-    Авторизация на сайте.
+    Авторизация объекта :model:`auth.User`.
+
+    **Template:**
+
+    :template:`authenticated/login.html`
     """
 
     form_class = UserLoginForm
@@ -113,25 +144,25 @@ class UserLoginView(SuccessMessageMixin, LoginView):
     success_message = "Добро пожаловать!"
 
     def get_context_data(self, **kwargs):
-        """
-        Получить контекст для этого представления.
-        """
+        """Получить контекст для этого представления."""
         context = super().get_context_data(**kwargs)
         context["title"] = "Авторизация на сайте"
         return context
 
 
 class UserLogoutView(LogoutView):
-    """
-    Выход с сайта.
-    """
+    """Выход из системы."""
 
     next_page = "blog:home"
 
 
 class CustomPasswordChangeView(PasswordChangeView):
     """
-    Изменение пароля пользователя
+    Изменение пароля экземпляра :model:`auth.User`.
+
+    **Template:**
+
+    :template:`authenticated/password_change.html`
     """
 
     form_class = PasswordChangingForm
@@ -139,6 +170,10 @@ class CustomPasswordChangeView(PasswordChangeView):
     success_url = reverse_lazy("profile:login")
 
     def form_valid(self, form):
+        """
+        Проверка формы
+        для корректного сохранения данных, с выходом из сессии.
+        """
         form.save()
         self.request.session.flush()
         logout(self.request)
@@ -146,9 +181,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
-        """
-        Получить контекст для этого представления.
-        """
+        """Получить контекст для этого представления."""
         context = super().get_context_data(**kwargs)
         context["title"] = "Смена Пароля"
         return context

@@ -7,9 +7,7 @@ from .models import Profile
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    """
-    Сигнал создания профиля пользователя.
-    """
+    """Создание профиля пользователя :model:`user_profile.Profile`."""
 
     if created:
         Profile.objects.create(user=instance)

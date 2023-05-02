@@ -4,9 +4,7 @@ from .models import Comment, Post
 
 
 class PostCreateForm(forms.ModelForm):
-    """
-    Форма создания объекта :model:`blog.Post`.
-    """
+    """Форма создания объекта :model:`blog.Post`."""
 
     class Meta:
         model = Post
@@ -20,9 +18,7 @@ class PostCreateForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        """
-        Обновление стилей формы.
-        """
+        """Обновление стилей формы."""
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
@@ -36,9 +32,7 @@ class PostCreateForm(forms.ModelForm):
 
 
 class CommentCreateForm(forms.ModelForm):
-    """
-    Форма создания объекта :model:`blog.Comment`.
-    """
+    """Форма создания объекта :model:`blog.Comment`."""
 
     class Meta:
         model = Comment

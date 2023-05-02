@@ -29,37 +29,27 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        """
-        Возвращает строку в виде имени пользователя в admin панели.
-        """
+        """Возвращает строку в виде имени пользователя."""
         return self.user.username
 
     def save(self, *args, **kwargs):
-        """
-        Создание поля slug при его отсутствии.
-        """
+        """Создание поля slug при его отсутствии."""
         if not self.slug:
             self.slug = unique_slugify(self, self.user.username)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        """
-        Ссылка на профиль, по slug полю.
-        """
+        """Возвращает ссылку на профиль, по идентификатору slug."""
         return reverse("profile:profile_detail", kwargs={"slug": self.slug})
 
     @property
     def get_profile_image(self):
-        """
-        Получение заглушки при отсутсвии изображения.
-        """
+        """Получение заглушки при отсутсвии изображения."""
         if not self.profile_image:
             return "/static/img/default-avatar.png"
         return self.profile_image.url
 
     @property
     def get_age(self):
-        """
-        Вычисление возраста пользователя.
-        """
+        """Возвращает возраст пользователя."""
         return (date.today() - self.date_birthday) // timedelta(days=365.2425)

@@ -5,8 +5,6 @@ from .models import Profile
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    """
-    Админ-панель модели Profile.
-    """
+    """Регистрация в админ-панели :model:`user_profile.Profile`."""
 
     list_display = ["user"]

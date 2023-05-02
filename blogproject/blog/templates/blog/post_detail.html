@@ -30,6 +30,12 @@
                         </form>
                     {% endif %}
                 </p>
+                {% if request.user == post.author %}
+                    <div class="d-grid gap-2 d-md-block mt-2">
+                        <a href="{% url 'blog:post_update' post.slug %}" class="btn btn-primary btn-sm">Редактировать</a>
+                        <a href="{% url 'blog:post_delete' post.slug %}" class="btn btn-primary btn-sm">Удалить</a>
+                    </div>
+                {% endif %}
                 <p class="card-text ">{{ post.body|safe }}</p>
             </div>
         </div>
@@ -39,6 +45,8 @@
 {% endblock %}
 
 {% block sidebar %}
+
+
 
 <div class="card border-0 my-2 mx-3">
     <div class="card-body">

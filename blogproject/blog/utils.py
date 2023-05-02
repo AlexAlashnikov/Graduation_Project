@@ -5,7 +5,8 @@ from pytils.translit import slugify
 
 def unique_slugify(instance, slug):
     """
-    Создаёт уникальный идентификатор `slug`, если такой идентификатор `slug` уже существует.
+    Создаёт уникальный идентификатор `slug`,
+    если такой идентификатор `slug` уже существует.
     """
     model = instance.__class__
     unique_slug = slugify(slug)
