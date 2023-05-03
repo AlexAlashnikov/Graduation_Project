@@ -5,7 +5,7 @@
 {% block content %}
 
 <h5 class="card-title "><img src="{{profile.get_profile_image}}" width="150" height="150" alt="{{ profile }}">
-    {{ profile }}
+    {{ profile.user.first_name }}
 </h5>
 <br>
 <div class="card-text">

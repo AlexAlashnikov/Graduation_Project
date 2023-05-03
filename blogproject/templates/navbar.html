@@ -34,6 +34,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'profile:profile_detail' request.user.profile.slug %}">Профиль</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog:post_create' %}">Новый Пост</a>
                         <li><a class="dropdown-item" href="{% url 'profile:update_profile' %}">Редактировать Профиль</a>
                         <li><a class="dropdown-item" href="{% url 'profile:password_change' %}">Смена пароль</a>
                         <li><hr class="dropdown-divider"></li>
