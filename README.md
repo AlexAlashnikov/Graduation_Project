@@ -1,18 +1,13 @@
 <h1 align="center">Graduation_Project 📝</h1>
 
-<ul>
-  <li>Hi, I am Alex and this is my graduation project.</li>
+- Hi, I am Alex and this is my graduation project.
 
-  <li>Is a blog site that allows users to share their thoughts and knowledge with others.</li>
-</ul>
+- Is a blog site that allows users to share their thoughts and knowledge with others.
 
+## Tech Stack
 
-<h3>Tech Stack</h3>
-
-<ul>
-  <li>Frontend: HTML/CSS/Bootstrap</li>
-  <li>Backend: Django</li>
-</ul>
+- Frontend: HTML/CSS/Bootstrap
+- Backend: Django
 
 ## Quick Start
 
