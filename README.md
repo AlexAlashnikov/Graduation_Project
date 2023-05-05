@@ -37,8 +37,6 @@ cd blogproject
 - This command will install all dependencies from requirements.txt
 ```
 make install
-
-
 ```
 - Сreate .env file with variables-
 ```

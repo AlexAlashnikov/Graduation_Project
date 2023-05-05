@@ -11,9 +11,6 @@ class AuthorRequiredMixin(AccessMixin):
             return self.handle_no_permission()
         if request.user.is_authenticated:
             if request.user != self.get_object().author:
-                messages.info(
-                    request,
-                    "Редактирование и удаление доступно только автору.",
-                )
+                messages.info(request, "Редактирование и удаление доступно только автору.")
                 return redirect("blog:home")
         return super().dispatch(request, *args, **kwargs)
