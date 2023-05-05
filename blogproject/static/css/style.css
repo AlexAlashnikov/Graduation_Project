@@ -7,7 +7,10 @@ body {
     font-size: 17px;
 }
 .card{
-    box-shadow: 0 16px 48px #09a886;
+    border-radius: 13px;
+    background: linear-gradient(315deg, #bdf0e6, #bdf0e6);
+    box-shadow:  -11px -11px 29px #317467,
+                11px 11px 29px #63ecd1;
 }
 @keyframes gradient {
     0% {
