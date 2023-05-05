@@ -1,0 +1,74 @@
+{% extends 'main.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<h5 class="card-title "><img src="{{profile.get_profile_image}}" width="150" height="150" alt="{{ profile }}">
+    {{ profile.user.first_name }}
+</h5>
+<br>
+<div class="card-text">
+    <ul>
+        <li>Никнейм: {{ profile.user.username }}</li>
+        <li>Заходил(а): {{ profile.user.last_login }}</li>
+        {% if profile.date_birthday %}
+            <li>Возраст: {{ profile.get_age }}</li>
+        {% endif %}
+        <li>О себе: {{ profile.bio }}</li>
+    </ul>
+</div>
+
+<form  method=POST action="{% url 'profile:follow_user' profile.slug %}">
+    {% csrf_token %}
+    {% if request.user != profile.user %}
+        {% if request.user.profile in profile.follows.all %}
+            <button class="btn btn-sm btn-danger btn-following" name="follow" value="unfollow" type="submit">
+                Отписаться
+            </button>
+        {% else %}
+            <button class="btn btn-sm btn-primary btn-following" name="follow" value="follow" type="submit">
+                Подписаться
+            </button>
+        {% endif %}
+    {% endif %}
+</form>
+
+{% endblock %}
+
+{% block sidebar %}
+
+<div class="card border-4">
+    <div class="card-body">
+        <h6 class="card-title">
+            Подписчики:
+        </h6>
+        {% for following in profile.follows.all %}
+            <a href="{{ following.get_absolute_url }}">{{ following }}</a><br>
+        {% endfor%}
+    </div>
+</div>
+<br>
+<div class="card border-4">
+    <div class="card-body">
+        <h6 class="card-title">
+            Подписки:
+        </h6>
+        {% for follower in profile.followed_by.all %}
+            <a href="{{ follower.get_absolute_url }}">{{ follower }}</a><br>
+        {% endfor%}
+    </div>
+</div><br>
+<div class="card border-4">
+    <div class="card-body">
+        <h6 class="card-title">
+            Посты:
+        </h6>
+        {% for post in all_posts_user %}
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            <br><br>
+        {% endfor %}
+    </div>
+</div><br>
+
+{% endblock %}

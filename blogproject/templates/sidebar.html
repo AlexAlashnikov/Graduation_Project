@@ -1,0 +1,23 @@
+{% load blog_tags %}
+
+<div class="card border-4">
+    <div class="card-body">
+        <h6 class="card-title">
+            Количество постов на сайте!
+        </h6>
+        <div class="card-text">
+            Всего постов на сайте: {% total_post %}
+        </div>
+    </div>
+</div>
+<br>
+<div class="card border-4">
+    <div class="card-body">
+        <h6 class="card-title">
+            Последние комментарии на сайте
+        </h6>
+        <div class="card-text">
+            {% show_latest_comments %}
+        </div>
+    </div>
+</div>

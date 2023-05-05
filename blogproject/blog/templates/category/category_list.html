@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+{% load static %}
+
+
+{% block content %}
+
+{% for category in categories %}
+    <div class="card my-2 mx-4">
+        <h5 class="card-header">{{ category.name }} | кол-во статей: ({{ category.post_amount }})</h5>
+        <div class="card-body">
+            <p class="card-text">{{ category.description|safe }}</p>
+            <a href="{% url 'blog:category_detail' category.pk category.slug %}" class="btn btn-primary">Перейти</a>
+        </div>
+    </div><br>
+{% endfor %}
+
+{% endblock%}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'main.html' %}
+{% load static %}
+
+
+{% block content %}
+
+{% for post in posts %}
+    <div  class="card border-0 my-2 mx-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ post.get_thumbnail }}" class="card-img-top" alt="{{ post.title }}">
+                </div>
+                <div class="col-md-8">
+                    <h4 class="card-title">{{ post.title }}</h4>
+                    <p class="card-text text-muted h6">
+                        <a href="{{ post.author.profile.get_absolute_url }}">{{ post.author }}</a>
+                        | {{ post.post_date}}
+                    </p>
+                    <p class="card-text">{{ post.short_description }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Читать далее &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div><br>
+{% endfor %}
+
+{% endblock%}
+
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
