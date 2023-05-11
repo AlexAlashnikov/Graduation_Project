@@ -135,7 +135,7 @@ class CategoryListView(ListView):
         return context
 
 
-class PostSearchView(ListView):
+class PostSearchView(LoginRequiredMixin, ListView):
     """
     Отображение поиска списка объектов :model:`blog.Post`.
 
@@ -152,6 +152,7 @@ class PostSearchView(ListView):
     model = Post
     context_object_name = "posts"
     allow_empty = True
+    login_url = "profile:login"
     template_name = "blog/post_list.html"
 
     def get_queryset(self):
