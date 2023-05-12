@@ -4,16 +4,18 @@
 
 {% block content %}
 
-<div class="card mb-3 border-0 nth-shadow">
-    <div class="card-body">
-        <h1>Авторизация</h1>
-        <br/>
-            <form action="{% url 'profile:login' %}" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Войти" class="btn btn-success">
-            </form>
+{% if not request.user.is_authenticated %}
+    <div class="card mb-3 border-0 nth-shadow">
+        <div class="card-body">
+            <h1>Авторизация</h1>
+            <br/>
+                <form action="{% url 'profile:login' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Войти" class="btn btn-success">
+                </form>
+        </div>
     </div>
-</div>
+{% endif %}
 
 {% endblock %}
