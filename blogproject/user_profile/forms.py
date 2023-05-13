@@ -59,11 +59,11 @@ class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         """Обновление стилей формы регистрации."""
         super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update({"placeholder": "Придумайте логин"})
+        self.fields["email"].widget.attrs.update({"placeholder": "Введите ваш email"})
+        self.fields["password1"].widget.attrs.update({"placeholder": "Придумайте пароль"})
+        self.fields["password2"].widget.attrs.update({"placeholder": "Повторите пароль"})
         for field in self.fields:
-            self.fields["username"].widget.attrs.update({"placeholder": "Придумайте логин"})
-            self.fields["email"].widget.attrs.update({"placeholder": "Введите ваш email"})
-            self.fields["password1"].widget.attrs.update({"placeholder": "Придумайте пароль"})
-            self.fields["password2"].widget.attrs.update({"placeholder": "Повторите придуманный пароль"})
             self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
 
 
@@ -73,10 +73,10 @@ class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         """Обновление стилей формы регистрации."""
         super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["placeholder"] = "Введите ваш логин"
+        self.fields["password"].widget.attrs["placeholder"] = "Введите ваш пароль"
+        self.fields["username"].label = "Логин"
         for field in self.fields:
-            self.fields["username"].widget.attrs["placeholder"] = "Введите ваш логин"
-            self.fields["password"].widget.attrs["placeholder"] = "Введите ваш пароль"
-            self.fields["username"].label = "Логин"
             self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
 
 

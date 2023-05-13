@@ -1,11 +1,12 @@
-from datetime import date, timedelta
+from datetime import datetime
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
 
-from blog.utils import unique_slugify
+from utils.utils import unique_slugify
 
 
 class Profile(models.Model):
@@ -52,4 +53,7 @@ class Profile(models.Model):
     @property
     def get_age(self):
         """Возвращает возраст пользователя."""
-        return (date.today() - self.date_birthday) // timedelta(days=365.2425)
+        if self.date_birthday:
+            return relativedelta(datetime.today(), self.date_birthday).years
+        else:
+            return "Не указано"
